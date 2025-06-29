@@ -9,11 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 AdPredictorConfig = namedtuple(
-        "AdPredictorConfig", ["beta", "prior_probability", "epsilon", "num_features"]
-    )
+    "AdPredictorConfig", ["beta", "prior_probability", "epsilon", "num_features"]
+)
+
 
 class AdPredictor(object):
-
     def __init__(self, config):
         self._config = config
         self._weights = {}
@@ -72,9 +72,7 @@ class AdPredictor(object):
 
     @property
     def weights(self):
-        return [
-            (util.deserialize_feature(f), w) for (f, w) in self._weights.items()
-        ]
+        return [(util.deserialize_feature(f), w) for (f, w) in self._weights.items()]
 
     def _apply_dynamics(self, weight):
         prior = util.prior_weight()

@@ -7,7 +7,6 @@ import json
 MAX_ABS_SURPRISE = 5.0
 
 
-
 def pp(message):
     """Pretty print a given protocol buffer message
     # TODO: to be removed
@@ -24,14 +23,12 @@ def prior_bias_weight(prior_probability, beta, num_features):
     with the given parameters, P(y | x, initial_weights) = prior.
     """
 
-    bias_mean = norm.ppf(prior_probability) * (beta ** 2 + num_features)
+    bias_mean = norm.ppf(prior_probability) * (beta**2 + num_features)
     return pb.Gaussian(mean=bias_mean, variance=1.0)
 
 
 def prior_weight():
-
-    """The global prior on non-bias weights
-    """
+    """The global prior on non-bias weights"""
     return pb.Gaussian(mean=0.0, variance=1.0)
 
 
@@ -61,7 +58,7 @@ def kl_divergence(p, q):
 
 
 def label_to_float(label):
-    assert type(label) == bool
+    assert isinstance(label, bool), "Label must be a boolean"
     return 1.0 if label else -1.0
 
 

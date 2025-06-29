@@ -13,10 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 class Sampler(object):
-    """Class that manages sampling feature_vector/label pairs.
-    """
+    """Class that manages sampling feature_vector/label pairs."""
 
-    def __init__(self, num_features, feature_cardinality, biased_feature_proportion, prior_probability, biased_feature_effect_length):
+    def __init__(
+        self,
+        num_features,
+        feature_cardinality,
+        biased_feature_proportion,
+        prior_probability,
+        biased_feature_effect_length,
+    ):
         self._num_features = num_features
         self._feature_cardinality = feature_cardinality
         self._biased_feature_proportion = biased_feature_proportion
@@ -50,9 +56,7 @@ class Sampler(object):
         ):
             key = util.serialize_feature(pb.Feature(feature=feature, value=value))
             if np.random.rand() < self._biased_feature_proportion:
-                direction = (
-                    np.random.rand() < self._prior_probability
-                )
+                direction = np.random.rand() < self._prior_probability
                 biased_weights[key] = direction
                 logger.info(
                     "Biased truth feature (%s, %s) to %s", feature, value, direction
@@ -104,12 +108,18 @@ SimulationConfig = namedtuple(
 
 COLORS = plt.get_cmap("tab10").colors
 
+
 def get_current_weights_by_feature(predictor):
-    by_feature = lambda kv: kv[0].feature
-    by_feature_value = lambda kv: (kv[0].feature, kv[0].value)
+    def by_feature(kv):
+        return kv[0].feature
+
+    def by_feature_value(kv):
+        return (kv[0].feature, kv[0].value)
+
     weights = sorted(predictor.weights, key=by_feature_value)
     for feature, group in itertools.groupby(weights, key=by_feature):
         yield feature, [(f, w.mean, w.variance) for (f, w) in group]
+
 
 def plot(predictor, sampler, num_examples, graph_out_extension, output_directory):
     plt.clf()
@@ -154,7 +164,7 @@ def main(
     visualization_interval=100,
     biased_feature_proportion=0.2,
     biased_feature_effect_length=10**100,
-    out_directory="./log/adpredictor/",
+    out_directory="./logs/adpredictor/",
     graph_out_extension="png",
 ):
     """Set up and run the AdPredictor on a simulated dataset.
@@ -206,7 +216,7 @@ def main(
         feature_cardinality=simulation_config.feature_cardinality,
         biased_feature_proportion=simulation_config.biased_feature_proportion,
         prior_probability=simulation_config.predictor_config.prior_probability,
-        biased_feature_effect_length=biased_feature_effect_length
+        biased_feature_effect_length=biased_feature_effect_length,
     )
 
     # Train and output graphs
@@ -215,9 +225,11 @@ def main(
         predictor.train(features, label)
         if iteration % simulation_config.visualization_interval == 0:
             plot(
-                predictor=predictor, sampler=sampler, num_examples=iteration,
+                predictor=predictor,
+                sampler=sampler,
+                num_examples=iteration,
                 graph_out_extension=simulation_config.graph_out_extension,
-                output_directory=simulation_config.out_directory
+                output_directory=simulation_config.out_directory,
             )
 
 
@@ -225,16 +237,46 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run AdPredictor simulation.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument("--beta", type=float, default=0.05, help="Beta parameter")
-    parser.add_argument("--prior-probability", type=float, default=0.5, help="Prior probability")
+    parser.add_argument(
+        "--prior-probability", type=float, default=0.5, help="Prior probability"
+    )
     parser.add_argument("--epsilon", type=float, default=0.05, help="Epsilon parameter")
-    parser.add_argument("--num-features", type=int, default=8, help="Number of features")
-    parser.add_argument("--feature-cardinality", type=int, default=5, help="Feature cardinality")
-    parser.add_argument("--num-examples", type=int, default=100, help="Number of examples")
-    parser.add_argument("--visualization-interval", type=int, default=100, help="Visualization interval")
-    parser.add_argument("--biased-feature-proportion", type=float, default=0.2, help="Biased feature proportion")
-    parser.add_argument("--biased-feature-effect-length", type=int, default=10**100, help="Biased feature effect length")
-    parser.add_argument("--out-directory", type=str, default="./log/adpredictor/", help="Output directory")
-    parser.add_argument("--graph-out-extension", type=str, default="png", help="Output extension for graphs")
+    parser.add_argument(
+        "--num-features", type=int, default=8, help="Number of features"
+    )
+    parser.add_argument(
+        "--feature-cardinality", type=int, default=5, help="Feature cardinality"
+    )
+    parser.add_argument(
+        "--num-examples", type=int, default=100, help="Number of examples"
+    )
+    parser.add_argument(
+        "--visualization-interval", type=int, default=100, help="Visualization interval"
+    )
+    parser.add_argument(
+        "--biased-feature-proportion",
+        type=float,
+        default=0.2,
+        help="Biased feature proportion",
+    )
+    parser.add_argument(
+        "--biased-feature-effect-length",
+        type=int,
+        default=10**100,
+        help="Biased feature effect length",
+    )
+    parser.add_argument(
+        "--out-directory",
+        type=str,
+        default="./logs/adpredictor/",
+        help="Output directory",
+    )
+    parser.add_argument(
+        "--graph-out-extension",
+        type=str,
+        default="png",
+        help="Output extension for graphs",
+    )
 
     args = parser.parse_args()
 

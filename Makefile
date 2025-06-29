@@ -11,7 +11,7 @@ ANIMATE =  convert \
 	-delay 50 \
 	-resize 600000@ \
 	-unsharp 0x1 \
-	-loop 0 ./log/adpredictor/*.png
+	-loop 0 ./logs/adpredictor/*.png
 
 all: | test
 
@@ -28,18 +28,18 @@ test:
 	env/bin/nosetests
 
 demo: | requirements proto
-	rm -rf ./log/adpredictor/*
-	mkdir -p ./log/adpredictor
+	rm -rf ./logs/adpredictor/*
+	mkdir -p ./logs/adpredictor
 	$(DEMO) --num-examples 25 --visualization-interval 1
-	$(ANIMATE) ./log/initial_learning.gif
+	$(ANIMATE) ./logs/initial_learning.gif
 
-	rm -rf ./log/adpredictor/*
+	rm -rf ./logs/adpredictor/*
 	$(DEMO) --num-examples 200 --visualization-interval 10
-	$(ANIMATE) ./log/convergence_learning.gif
+	$(ANIMATE) ./logs/convergence_learning.gif
 
-	rm -rf ./log/adpredictor/*
+	rm -rf ./logs/adpredictor/*
 	$(DEMO) --num-examples 400 --visualization-interval 20
-	$(ANIMATE) ./log/online_learning.gif
+	$(ANIMATE) ./logs/online_learning.gif
 
 .PHONY:
 	test
