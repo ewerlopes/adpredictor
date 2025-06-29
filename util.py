@@ -1,5 +1,5 @@
-from protobuf_to_dict import protobuf_to_dict
 import protobufs.adpredictor_pb2 as pb
+from google.protobuf.json_format import MessageToDict
 from scipy.stats import norm
 import numpy as np
 import json
@@ -7,11 +7,12 @@ import json
 MAX_ABS_SURPRISE = 5.0
 
 
+
 def pp(message):
     """Pretty print a given protocol buffer message
     # TODO: to be removed
     """
-    return json.dumps(protobuf_to_dict(message))
+    return json.dumps(MessageToDict(message), indent=4)
 
 
 def bias_feature():

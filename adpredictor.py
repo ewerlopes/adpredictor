@@ -8,10 +8,11 @@ from collections import namedtuple
 logger = logging.getLogger(__name__)
 
 
-class AdPredictor(object):
-    Config = namedtuple(
-        "Config", ["beta", "prior_probability", "epsilon", "num_features"]
+AdPredictorConfig = namedtuple(
+        "AdPredictorConfig", ["beta", "prior_probability", "epsilon", "num_features"]
     )
+
+class AdPredictor(object):
 
     def __init__(self, config):
         self._config = config
@@ -72,7 +73,7 @@ class AdPredictor(object):
     @property
     def weights(self):
         return [
-            (util.deserialize_feature(f), w) for (f, w) in self._weights.iteritems()
+            (util.deserialize_feature(f), w) for (f, w) in self._weights.items()
         ]
 
     def _apply_dynamics(self, weight):

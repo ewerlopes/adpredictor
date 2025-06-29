@@ -1,4 +1,4 @@
-DEMO = python example.py \
+DEMO = python main.py \
 	--num-examples 500 \
 	--num-features 5 \
 	--feature-cardinality 10 \
@@ -11,7 +11,7 @@ ANIMATE =  convert \
 	-delay 50 \
 	-resize 600000@ \
 	-unsharp 0x1 \
-	-loop 0 /tmp/adpredictor/*.png
+	-loop 0 ./log/adpredictor/*.png
 
 all: | test
 
@@ -30,17 +30,18 @@ test:
 	env/bin/nosetests
 
 demo: | requirements proto
-	rm -rf /tmp/adpredictor/*
+	rm -rf ./log/adpredictor/*
+	mkdir -p ./log/adpredictor
 	$(DEMO) --num-examples 25 --visualization-interval 1
-	$(ANIMATE) /tmp/initial_learning.gif
+	$(ANIMATE) ./log/initial_learning.gif
 
-	rm -rf /tmp/adpredictor/*
+	rm -rf ./log/adpredictor/*
 	$(DEMO) --num-examples 200 --visualization-interval 10
-	$(ANIMATE) /tmp/convergence_learning.gif
+	$(ANIMATE) ./log/convergence_learning.gif
 
-	rm -rf /tmp/adpredictor/*
+	rm -rf ./log/adpredictor/*
 	$(DEMO) --num-examples 400 --visualization-interval 20
-	$(ANIMATE) /tmp/online_learning.gif
+	$(ANIMATE) ./log/online_learning.gif
 
 .PHONY:
 	test
