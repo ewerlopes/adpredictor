@@ -5,7 +5,7 @@ import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import protobufs.adpredictor_pb2 as pb
-import util
+import util as util
 import os
 import argparse
 

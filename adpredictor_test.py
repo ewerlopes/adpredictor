@@ -2,7 +2,7 @@ import protobufs.adpredictor_pb2 as pb
 from adpredictor import AdPredictor
 import numpy as np
 import unittest
-import util
+import util as util
 
 
 class AdPredictorTest(unittest.TestCase):

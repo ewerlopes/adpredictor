@@ -2,7 +2,7 @@ from scipy.stats import norm
 import logging
 import numpy as np
 import protobufs.adpredictor_pb2 as pb
-import util
+import util as util
 from collections import namedtuple
 
 logger = logging.getLogger(__name__)

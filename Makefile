@@ -20,11 +20,9 @@ proto:
 	find . -iname '*.proto' | xargs -J % protoc --proto_path=. --python_out=protobufs %
 	touch protobufs/__init__.py
 
-freeze:
-	pip freeze > requirements.txt
-
 requirements:
-	pip install -r requirements.txt
+	uv lock
+	uv sync
 
 test:
 	env/bin/nosetests
